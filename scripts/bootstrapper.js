@@ -1,5 +1,5 @@
 (function() {
-	var Bootstrapper = (function() {	
+	var bootstrapper = (function() {	
 		return {
 			load: function(options) {
 				var dependencies = options.dependencies || [],
@@ -9,15 +9,15 @@
 					// Define commonly used libs here. 
 					// They can then be referred to by their name, rather than their path.
 					paths: {
-						jquery: 'lib/jquery.1.7.1.min',
-						underscore: 'lib/require_underscore',
-						backbone: 'lib/require_backbone',
-						mustache: 'lib/require_mustache'
+						jquery: 'lib/jquery.1.7.1.min',			// In jQuery 1.7+, CommonJS AMD is baked in
+						underscore: 'lib/require_underscore',	// Wrapper modules for Underscore
+						backbone: 'lib/require_backbone',		// ... Backbone
+						mustache: 'lib/require_mustache'		// ... and Mustache
 					}
 				}, dependencies, onLoad);
 			}
 		}
 	}());
 
-	Bootstrapper.load(theConfig);
+	bootstrapper.load(theConfig);
 }());

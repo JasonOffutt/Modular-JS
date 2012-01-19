@@ -1,11 +1,24 @@
 (function() {
+	// NOTE: I chose to implement all of my application constructs in a single module
+	// rather than separate ones. Logically it seemed to make more sense to group modules
+	// together as a "feature" rather than a logical set of roles within the application
+	// (e.g. - Models, Routers, Views, etc). Originally, I had them broken out that way,
+	// but the amount of modules I had to deal with quickly became less manageable, and 
+	// the overhead of additional HTTP requests didn't seem to buy me that much in terms
+	// of flexibility. Your mileage may vary if you've got a set of more generic utility
+	// objects and functions that you need to break out and reuse all over the place.
+	
 	define(['jquery', 'underscore', 'backbone', 'mustache'], function() {
+		// Hanging all app/Backbone constructs off a namespace object to return as a module
 		var Namespace = {};
+		
+		// Basic event aggrigator pattern implemetation for pub/sub awesomeness.
+		// Great read on this pattern here: http://bit.ly/p3nTe6
 		Namespace.Events = _.extend({}, Backbone.Events);
 		
 		Namespace.Model = Backbone.Model.extend({
 			initialize: function(options) {
-				_.bindAll(this);
+				_.bindAll(this);	// <3 being able to rely on 'this' actually being 'this'
 			}
 		});
 		
@@ -29,7 +42,7 @@
 			initialize: function(options) {
 				this.model = options.model;
 				this.ev = options.ev;
-				_.bindAll();
+				_.bindAll();	// bindAll becomes extra handy when using Event Aggrigation
 			},
 			render: function() {
 				var $el = $(this.el),
@@ -88,24 +101,35 @@
 			initialize: function(options) {
 				this.items = options.items || new Namespace.Collection();
 				this.ev = options.ev;
+				
+				// Binding all method's context of 'this' to the current object instance
+				// before wiring up the two events handlers that follow.
 				_.bindAll(this);
 				this.ev.bind('itemSelected', this.onItemSelected);
 				this.ev.bind('backClicked', this.goBack);
 				Backbone.history.loadUrl();
 			},
 			index: function() {
-				this.indexView = new Namespace.ItemList({
+				var indexView = new Namespace.ItemList({
 					model: this.items,
 					ev: this.ev
 				});
-				this.indexView.render();
+				
+				indexView.render();
 			},
 			item: function(id) {
-				var item = this.items.get(id);
-				this.itemView = new Namespace.Item({ model: item, ev: this.ev });
-				this.itemView.render();
+				var item = this.items.get(id),
+					itemView = new Namespace.Item({ 
+						model: item, 
+						ev: this.ev 
+					});
+					
+				itemView.render();
 			},
 			onItemSelected: function(id) {
+				// Without first calling _.bindAll(), the value of 'this' is not
+				// necessarily going to be the current instance of the Router any more.
+				// In fact, 'this' will probably be the global object.
 				this.navigate('item/' + id, true);
 			},
 			goBack: function() {
