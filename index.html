@@ -4,6 +4,9 @@
 	<script data-main="scripts/bootstrapper" src="scripts/lib/require.js"></script>
 	<script type="text/javascript">
 		var theConfig = {
+			// Define application dependencies here using the 'order!' prefix to ensure they are inserted into
+			// the DOM in the correct order. When using this method of script inclusion, make sure to grab the 
+			// order.js module from RequireJS.
 			dependencies: ['order!jquery', 'order!underscore', 'order!backbone', 'order!mustache', 'order!app'],
 			onLoad: function($, _, Backbone, Mustache, app) {
 				$(function() {
