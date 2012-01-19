@@ -84,7 +84,7 @@
 			back: function() {
 				var $el = $(this.el),
 					that = this;
-				this.ev.trigger('backClicked');
+				this.ev.trigger('goBack');
 				$el.fadeOut(function() {
 					that.remove();
 				});
@@ -106,7 +106,7 @@
 				// before wiring up the two events handlers that follow.
 				_.bindAll(this);
 				this.ev.bind('itemSelected', this.onItemSelected);
-				this.ev.bind('backClicked', this.goBack);
+				this.ev.bind('goBack', this.goBack);
 				Backbone.history.loadUrl();
 			},
 			index: function() {
