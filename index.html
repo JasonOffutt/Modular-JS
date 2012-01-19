@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+	<head><title>RequireJS AMD Module Test</title></head>
+	<script data-main="scripts/bootstrapper" src="scripts/lib/require.js"></script>
+	<script type="text/javascript">
+		var theConfig = {
+			dependencies: ['order!jquery', 'order!underscore', 'order!backbone', 'order!mustache', 'order!app'],
+			onLoad: function($, _, Backbone, Mustache, app) {
+				$(function() {
+					app.start();
+				});
+			}
+		};
+	</script>
+	<body>
+		<div class="wrapper">
+	</body>
+</html>
