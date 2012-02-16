@@ -35,7 +35,7 @@
 		Namespace.ItemList = Backbone.View.extend({
 			tagName: 'ul',
 			className: 'items',
-			template: '{{#items}}<li><a id="{{id}}" href="#item/{{id}}">{{name}}</a></li>{{/items}}',
+			template: '{{#items}}<li><a id="{{id}}" href="/pushstate/item/{{id}}">{{name}}</a></li>{{/items}}',
 			events: {
 				'click li a': 'selectItem'
 			},
@@ -67,7 +67,7 @@
 		Namespace.Item = Backbone.View.extend({
 			tagName: 'div',
 			className: 'item',
-			template: '<p>ID: {{id}}</p><p><strong>{{name}}</strong></p><a href="#" class="back">Back</a>',
+			template: '<p>ID: {{id}}</p><p><strong>{{name}}</strong></p><a href="/pushstate" class="back">Back</a>',
 			initialize: function(options) {
 				this.model = options.model;
 				this.ev = options.ev;
@@ -94,9 +94,15 @@
 		});
 		
 		Namespace.Router = Backbone.Router.extend({
+			// Playing around with using HTML5 PushState rather than hash routing. Pretty nifty, but in practice,
+			// you really need server code that will match up with your Backbone routes that will serve up the
+			// right content when somebody clicks a bookmark.
+			// It's also worth noting that PushState is not currently supported in IE, so additional hash routes
+			// may be necessary when dealing with incompatibility issues.
 			routes: {
-				'': 'index',
-				'item/:id': 'item'
+				'pushstate': 'index',
+				'pushstate/item/:id': 'item',
+				'*options': 'index'
 			},
 			initialize: function(options) {
 				this.items = options.items || new Namespace.Collection();
@@ -130,10 +136,10 @@
 				// Without first calling _.bindAll(), the value of 'this' is not
 				// necessarily going to be the current instance of the Router any more.
 				// In fact, 'this' will probably be the global object.
-				this.navigate('item/' + id, true);
+				this.navigate('pushstate/item/' + id, true);
 			},
 			goBack: function() {
-				this.navigate('', true);
+				this.navigate('pushstate', true);
 			}
 		});
 		

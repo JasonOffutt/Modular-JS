@@ -10,7 +10,7 @@
 							{ id: 3, name: 'baz' }
 						]),
 						router = new Namespace.Router({ items: collection, ev: Namespace.Events });
-					Backbone.history.start();
+					Backbone.history.start({ pushState: true });
 				}
 		};
 		
